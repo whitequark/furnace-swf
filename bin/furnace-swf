@@ -1,0 +1,96 @@
+#!/usr/bin/env ruby
+
+require "rubygems"
+require "bundler/setup"
+
+$: << File.join(File.dirname(__FILE__), '..', 'lib')
+
+require "trollop"
+require "furnace-swf"
+
+include Furnace
+
+SUBCOMMANDS = %w(abclist abcextract abcreplace)
+
+opts = Trollop::options do
+  version "furnace-swf #{SWF::VERSION}"
+  banner <<-EOS
+  furnace-swf is a processing tool which operates on Flash SWF files.
+
+  Possible subcommands: #{SUBCOMMANDS.join ' '}
+  Try #{__FILE__} subcommand --help.
+
+  Usage: #{__FILE__} [options] <subcommand>
+EOS
+
+  opt :input,    "SWF input file",   :type => :io
+  opt :trace,    "Trace reading",    :default => false
+
+  stop_on SUBCOMMANDS
+end
+
+subcommand = ARGV.shift
+subopts = case subcommand
+when 'abclist'
+  Trollop::options do
+  end
+
+when 'abcextract'
+  Trollop::options do
+    opt :name,    "ABC tag name",     :type => :string, :required => true
+    opt :output,  "ABC output file",  :type => :string, :required => true
+  end
+
+when 'abcreplace'
+  Trollop::options do
+    opt :name,    "ABC tag name",             :type => :string, :required => true
+    opt :input,   "ABC input file",           :type => :io,     :required => true
+    opt :output,  "Combined SWF output file", :type => :string, :required => true
+  end
+end
+
+Trollop::die "Option --input is required" unless opts[:input]
+
+swf = nil
+File.open(opts[:input]) do |file|
+  swf = SWF::File.new
+
+  if opts[:trace]
+    BinData::trace_reading do
+      swf.read(file)
+    end
+  else
+    swf.read(file)
+  end
+end
+
+case subcommand
+when 'abclist'
+  puts "ABC tags:"
+
+  swf.stream.tags(SWF::DoABCTag).each do |tag|
+    puts "  #{tag.name.inspect}: #{tag.bytecode.length} byte(s)"
+  end
+
+when 'abcextract'
+  if tag = swf.stream.tags(SWF::DoABCTag).find { |tag| tag.name == subopts[:name] }
+    File.open(subopts[:output], 'w') do |f|
+      f.write tag.bytecode
+    end
+  else
+    puts "Tag #{subopts[:name].inspect} was not found"
+    exit 1
+  end
+
+when 'abcreplace'
+  if tag = swf.stream.tags(SWF::DoABCTag).find { |tag| tag.name == subopts[:name] }
+    tag.bytecode = subopts[:input].read
+
+    File.open(subopts[:output], 'w') do |f|
+      swf.write f
+    end
+  else
+    puts "Tag #{subopts[:name].inspect} was not found"
+    exit 1
+  end
+end

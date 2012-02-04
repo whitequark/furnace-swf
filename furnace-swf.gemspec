@@ -1,9 +1,10 @@
 # -*- encoding: utf-8 -*-
 $:.push File.expand_path("../lib", __FILE__)
+require 'furnace-swf'
 
 Gem::Specification.new do |s|
   s.name        = "furnace-swf"
-  s.version     = "0.0.1"
+  s.version     = Furnace::SWF::VERSION
   s.authors     = ["Peter Zotov", "Sergey Gridassov"]
   s.email       = ["whitequark@whitequark.org", "grindars@gmail.com"]
   s.homepage    = "http://github.com/whitequark/furnace-swf"

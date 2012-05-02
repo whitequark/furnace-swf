@@ -17,7 +17,7 @@ module Furnace::SWF
       when 'FWS'
         stream.do_read io
       when 'CWS'
-        uncompressed = Zlib.inflate(io.read_all_bytes)
+        uncompressed = Zlib::Inflate.inflate(io.read_all_bytes)
         stream.do_read BinData::IO.new(StringIO.new(uncompressed))
       else
         raise ArgumentError, "invalid signature"

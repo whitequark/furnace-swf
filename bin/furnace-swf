@@ -94,7 +94,7 @@ when 'abcextract'
     end
   else
     puts "Tag #{subopts[:name].inspect} was not found"
-    exit 1
+    exit -1
   end
 
 when 'abcreplace'
@@ -106,6 +106,6 @@ when 'abcreplace'
     end
   else
     puts "Tag #{subopts[:name].inspect} was not found"
-    exit 1
+    exit -1
   end
 end

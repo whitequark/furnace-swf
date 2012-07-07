@@ -1,9 +1,24 @@
 #!/usr/bin/env ruby
 
 require "rubygems"
-require "bundler/setup"
 
-$: << File.join(File.dirname(__FILE__), '..', 'lib')
+root_dir = File.expand_path(File.join(File.dirname(__FILE__),'..'))
+if File.directory?(File.join(root_dir,'.git'))
+  Dir.chdir(root_dir) do |path|
+    require 'bundler'
+
+    begin
+      Bundler.setup(:default)
+    rescue Bundler::BundlerError => e
+      warn e.message
+      warn "Run `bundle install` to install missing gems"
+      exit e.status_code
+    end
+  end
+end
+
+lib_dir = File.join(root_dir,'lib')
+$LOAD_PATH << lib_dir unless $LOAD_PATH.include?(lib_dir)
 
 require "trollop"
 require "furnace-swf"
@@ -18,9 +33,9 @@ opts = Trollop::options do
   furnace-swf is a processing tool which operates on Flash SWF files.
 
   Possible subcommands: #{SUBCOMMANDS.join ' '}
-  Try #{__FILE__} subcommand --help.
+  Try #{$0} subcommand --help.
 
-  Usage: #{__FILE__} [options] <subcommand>
+  Usage: #{$0} [options] <subcommand>
 EOS
 
   opt :input,    "SWF input file",   :type => :io
@@ -78,8 +93,8 @@ when 'abcextract'
       f.write tag.bytecode
     end
   else
-    puts "Tag #{subopts[:name].inspect} was not found"
-    exit 1
+    $stderr.puts "Tag #{subopts[:name].inspect} was not found"
+    exit -1
   end
 
 when 'abcreplace'
@@ -90,7 +105,7 @@ when 'abcreplace'
       swf.write f
     end
   else
-    puts "Tag #{subopts[:name].inspect} was not found"
-    exit 1
+    $stderr.puts "Tag #{subopts[:name].inspect} was not found"
+    exit -1
   end
 end

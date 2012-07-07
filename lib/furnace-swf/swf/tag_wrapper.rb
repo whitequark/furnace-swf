@@ -30,7 +30,7 @@ module Furnace::SWF
     end
 
     def real_length=(value)
-      if value > 0x3f
+      if value >= 0x3f
         self.short_length = 0x3f
         self.long_length  = value
       else

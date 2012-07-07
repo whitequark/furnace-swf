@@ -93,7 +93,7 @@ when 'abcextract'
       f.write tag.bytecode
     end
   else
-    puts "Tag #{subopts[:name].inspect} was not found"
+    $stderr.puts "Tag #{subopts[:name].inspect} was not found"
     exit -1
   end
 
@@ -105,7 +105,7 @@ when 'abcreplace'
       swf.write f
     end
   else
-    puts "Tag #{subopts[:name].inspect} was not found"
+    $stderr.puts "Tag #{subopts[:name].inspect} was not found"
     exit -1
   end
 end

@@ -81,5 +81,13 @@ module Furnace::SWF
         @content.length
       end
     end
+
+    def debug_name_of(child)
+      if child.is_a?(Tag)
+        "#{debug_name}.content"
+      else
+        super
+      end
+    end
   end
 end

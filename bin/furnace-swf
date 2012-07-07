@@ -33,9 +33,9 @@ opts = Trollop::options do
   furnace-swf is a processing tool which operates on Flash SWF files.
 
   Possible subcommands: #{SUBCOMMANDS.join ' '}
-  Try #{__FILE__} subcommand --help.
+  Try #{$0} subcommand --help.
 
-  Usage: #{__FILE__} [options] <subcommand>
+  Usage: #{$0} [options] <subcommand>
 EOS
 
   opt :input,    "SWF input file",   :type => :io

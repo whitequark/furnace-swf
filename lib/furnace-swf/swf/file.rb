@@ -13,7 +13,7 @@ module Furnace::SWF
 
       header.do_read(io)
 
-      case header.signature
+      case header.signature.to_s
       when 'FWS'
         stream.do_read io
       when 'CWS'

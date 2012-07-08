@@ -1,9 +1,15 @@
 module Furnace::SWF
   class DoABCTag < Tag
-    type 82
+    type 72
 
-    uint32  :flags
-    stringz :name
-    string  :bytecode, :read_length => lambda { parent.real_length - 4 - name.length - 1 }
+    string  :bytecode, :read_length => lambda { parent.real_length }
+
+    def name
+      "<DoABCTag>"
+    end
+
+    def flags
+      0
+    end
   end
 end

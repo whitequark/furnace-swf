@@ -83,12 +83,12 @@ case subcommand
 when 'abclist'
   puts "ABC tags:"
 
-  swf.stream.tags(SWF::DoABCTag).each do |tag|
+  swf.stream.tags(SWF::DoABCTag, SWF::DoABC2Tag).each do |tag|
     puts "  #{tag.name.inspect}: #{tag.bytecode.length} byte(s)"
   end
 
 when 'abcextract'
-  if tag = swf.stream.tags(SWF::DoABCTag).find { |tag| tag.name == subopts[:name] }
+  if tag = swf.stream.tags(SWF::DoABCTag, SWF::DoABC2Tag).find { |tag| tag.name == subopts[:name] }
     File.open(subopts[:output], 'w') do |f|
       f.write tag.bytecode
     end
@@ -98,7 +98,7 @@ when 'abcextract'
   end
 
 when 'abcreplace'
-  if tag = swf.stream.tags(SWF::DoABCTag).find { |tag| tag.name == subopts[:name] }
+  if tag = swf.stream.tags(SWF::DoABCTag, SWF::DoABC2Tag).find { |tag| tag.name == subopts[:name] }
     tag.bytecode = subopts[:input].read
 
     File.open(subopts[:output], 'w') do |f|

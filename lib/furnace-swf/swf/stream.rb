@@ -15,7 +15,7 @@ module Furnace::SWF
     end
 
     def tags(*types)
-     tag_wrappers.select { |tw| types.any? { |type| tw.content.is_a? type } }.map(&:content)
+      tag_wrappers.select { |tw| types.any? { |type| tw.content.is_a? type } }.map(&:content)
     end
 
     def real_num_bytes

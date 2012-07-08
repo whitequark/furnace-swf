@@ -5,11 +5,11 @@ module Furnace::SWF
     string  :bytecode, :read_length => lambda { parent.real_length }
 
     def name
-        "<DoABCTag>"
+      "<DoABCTag>"
     end
 
     def flags
-        0
+      0
     end
   end
 end

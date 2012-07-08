@@ -14,8 +14,8 @@ module Furnace::SWF
           BigDecimal.new(frame_rate_lo) / 100
     end
 
-    def tags(type)
-     tag_wrappers.select { |tw| tw.content.is_a? type }.map(&:content)
+    def tags(*types)
+     tag_wrappers.select { |tw| types.any? { |type| tw.content.is_a? type } }.map(&:content)
     end
 
     def real_num_bytes

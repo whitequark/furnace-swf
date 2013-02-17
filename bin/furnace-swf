@@ -79,33 +79,43 @@ File.open(opts[:input]) do |file|
   end
 end
 
+def find_tag(swf, name)
+  abc_tags = swf.stream.tags(SWF::DoABCTag, SWF::DoABC2Tag)
+
+  if name =~ /\d+/
+    abc_tags[name.to_i]
+  else
+    abc_tags.find { |tag| tag.name == name }
+  end
+end
+
 case subcommand
 when 'abclist'
   puts "ABC tags:"
 
-  swf.stream.tags(SWF::DoABCTag, SWF::DoABC2Tag).each do |tag|
-    puts "  #{tag.name.inspect}: #{tag.bytecode.length} byte(s)"
+  swf.stream.tags(SWF::DoABCTag, SWF::DoABC2Tag).each_with_index do |tag, index|
+    puts " #{index}) #{tag.name.inspect}: #{tag.bytecode.length} byte(s)"
   end
 
 when 'abcextract'
-  if tag = swf.stream.tags(SWF::DoABCTag, SWF::DoABC2Tag).find { |tag| tag.name == subopts[:name] }
+  if tag = find_tag(swf, subopts[:name])
     File.open(subopts[:output], 'w') do |f|
       f.write tag.bytecode
     end
   else
-    $stderr.puts "Tag #{subopts[:name].inspect} was not found"
+    $stderr.puts "Tag `#{subopts[:name]}' was not found"
     exit -1
   end
 
 when 'abcreplace'
-  if tag = swf.stream.tags(SWF::DoABCTag, SWF::DoABC2Tag).find { |tag| tag.name == subopts[:name] }
+  if tag = find_tag(swf, subopts[:name])
     tag.bytecode = subopts[:input].read
 
     File.open(subopts[:output], 'w') do |f|
       swf.write f
     end
   else
-    $stderr.puts "Tag #{subopts[:name].inspect} was not found"
+    $stderr.puts "Tag `#{subopts[:name]}' was not found"
     exit -1
   end
 end

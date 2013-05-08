@@ -99,7 +99,7 @@ when 'abclist'
 
 when 'abcextract'
   if tag = find_tag(swf, subopts[:name])
-    File.open(subopts[:output], 'w') do |f|
+    File.open(subopts[:output], 'wb') do |f|
       f.write tag.bytecode
     end
   else
@@ -111,7 +111,7 @@ when 'abcreplace'
   if tag = find_tag(swf, subopts[:name])
     tag.bytecode = subopts[:input].read
 
-    File.open(subopts[:output], 'w') do |f|
+    File.open(subopts[:output], 'wb') do |f|
       swf.write f
     end
   else

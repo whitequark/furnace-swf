@@ -67,7 +67,7 @@ end
 Trollop::die "Option --input is required" unless opts[:input]
 
 swf = nil
-File.open(opts[:input]) do |file|
+File.open(opts[:input], 'rb') do |file|
   swf = SWF::File.new
 
   if opts[:trace]

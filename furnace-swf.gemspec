@@ -20,6 +20,6 @@ Gem::Specification.new do |s|
 
   s.required_ruby_version = '>= 1.9.1'
 
-  s.add_runtime_dependency "bindata"
+  s.add_runtime_dependency "bindata", '~> 1.6.0'
   s.add_runtime_dependency "trollop"
 end
